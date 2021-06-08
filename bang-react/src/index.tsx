@@ -1,5 +1,5 @@
+import { APIService, RecoilService, ThemeService } from "./services";
 import { BangContext, Context } from "./context";
-import { RecoilService, ThemeService } from "./services";
 
 import { App } from "./components";
 import React from "react";
@@ -9,8 +9,9 @@ import { default as _RecoilOutside } from "recoil-outside";
 import reportWebVitals from "./reportWebVitals";
 
 const ctx: BangContext = {
-    themeService: new ThemeService(),
-    recoilService: new RecoilService(),
+    theme: new ThemeService(),
+    recoil: new RecoilService(),
+    api: new APIService(),
 };
 
 const RecoilOutside = _RecoilOutside as any;

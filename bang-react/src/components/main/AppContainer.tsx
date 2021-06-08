@@ -5,8 +5,8 @@ import { Context } from "../../context";
 import { useRecoilValue } from "recoil";
 
 export function AppContainer() {
-    const { recoilService: state } = useContext(Context);
-    const self = useRecoilValue(state.self);
+    const { recoil } = useContext(Context);
+    const self = useRecoilValue(recoil.self);
 
     return self == null ? <Auth /> : <div>hello</div>;
 }

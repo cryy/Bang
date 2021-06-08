@@ -6,8 +6,20 @@ export class ThemeService {
 
     constructor() {
         this._theme = createTheme({
+            shape: {
+                borderRadius: 5
+            },
+            typography: {
+                fontFamily: "'Source Sans Pro', sans-serif"
+            },
             palette: {
-                mode: "light"
+                mode: "light",
+                primary: {
+                    main: "#1990e9",
+                },
+                secondary: {
+                    main: "#f55790",
+                }
             }
         });
     }

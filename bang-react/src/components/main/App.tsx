@@ -8,7 +8,7 @@ export function App() {
     const ctx = React.useContext(Context);
 
     return (
-        <ThemeProvider theme={ctx.themeService.theme}>
+        <ThemeProvider theme={ctx.theme.theme}>
             <CssBaseline />
             <AppContainer />
         </ThemeProvider>
