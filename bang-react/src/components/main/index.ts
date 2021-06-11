@@ -1,3 +1,3 @@
 export * from './App';
-export * from './Auth';
 export * from './AppContainer';
+export * from './Auth';

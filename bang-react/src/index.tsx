@@ -8,10 +8,14 @@ import { RecoilRoot } from "recoil";
 import { default as _RecoilOutside } from "recoil-outside";
 import reportWebVitals from "./reportWebVitals";
 
+const theme = new ThemeService();
+const recoil = new RecoilService();
+const api = new APIService(recoil);
+
 const ctx: BangContext = {
-    theme: new ThemeService(),
-    recoil: new RecoilService(),
-    api: new APIService(),
+    theme: theme,
+    recoil: recoil,
+    api: api
 };
 
 const RecoilOutside = _RecoilOutside as any;

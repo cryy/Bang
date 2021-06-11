@@ -1,3 +1,5 @@
+using Bang.Services;
+using Bang.WebSocket;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -19,9 +21,12 @@ namespace Bang
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpClient();
             services.AddControllersWithViews();
-
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "bang-react/build"; });
+            services.AddSignalR();
+            services.AddSingleton<DisconnectService>();
+            services.AddSingleton<GameService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -47,6 +52,7 @@ namespace Bang
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
+                endpoints.MapHub<GameHub>("/api/ws");
             });
 
             app.UseSpa(spa =>
