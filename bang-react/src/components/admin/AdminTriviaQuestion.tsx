@@ -26,10 +26,8 @@ export function AdminTriviaQuestion({ question }: AdminTriviaQuestionProps) {
     const [timeLeft, setTimeLeft] = useState(question!.wait! / 1000);
 
     React.useEffect(() => {
-
         const handler = () => {
-            if(interval)
-            {
+            if (interval) {
                 clearInterval(interval);
                 interval = null;
 
@@ -57,17 +55,16 @@ export function AdminTriviaQuestion({ question }: AdminTriviaQuestionProps) {
             }, 1000);
         }, 5000);
 
-        return (() => {
+        return () => {
             api.connection.off("ForceStopTimeout", handler);
-        });
+        };
     }, []);
-
 
     const next = () => {
         setQuestion(null);
         api.nextAsync();
     };
-    
+
     return (
         <Grid
             container
@@ -77,11 +74,13 @@ export function AdminTriviaQuestion({ question }: AdminTriviaQuestionProps) {
                 height: h as number,
             }}
         >
-            <Grid item xs={12} height="64px" margin="32px 0 0 0">
+            <Grid item xs={2} />
+            <Grid item xs={8} height="64px" margin="32px 0 0 0">
                 <Typography fontSize="2rem" fontWeight="600" textAlign="center">
                     {question?.title}
                 </Typography>
             </Grid>
+            <Grid item xs={2} />
 
             <Grid item xs={12} margin="14px 0 0 0" height="14px">
                 <Box
@@ -94,40 +93,38 @@ export function AdminTriviaQuestion({ question }: AdminTriviaQuestionProps) {
                 ></Box>
             </Grid>
 
-            <Grid item xs={4} height="64px" />
             <Grid
                 item
-                xs={2}
-                height="64px"
+                xs={6}
+                height="124px"
                 display="flex"
                 justifyContent="center"
                 alignContent="center"
                 flexDirection="column"
             >
-                <Typography fontWeight="600" fontSize="1.6rem" textAlign="center">
+                <Typography fontWeight="500" fontSize="1.6rem" textAlign="center">
                     Igrači
                 </Typography>
-                <Typography fontWeight="500" fontSize="1.4rem" textAlign="center">
+                <Typography fontWeight="400" fontSize="1.4rem" textAlign="center">
                     {players.length}
                 </Typography>
             </Grid>
             <Grid
                 item
-                xs={2}
-                height="64px"
+                xs={6}
+                height="124px"
                 display="flex"
                 justifyContent="center"
                 alignContent="center"
                 flexDirection="column"
             >
-                <Typography fontWeight="600" fontSize="1.6rem" textAlign="center">
+                <Typography fontWeight="500" fontSize="1.6rem" textAlign="center">
                     Preostalo vremena
                 </Typography>
-                <Typography fontWeight="500" fontSize="1.4rem" textAlign="center">
+                <Typography fontWeight="400" fontSize="1.4rem" textAlign="center">
                     {timeLeft}s
                 </Typography>
             </Grid>
-            <Grid item xs={4} height="64px" />
 
             <Grid item xs={2} />
             <Grid item xs={8}>
@@ -157,15 +154,22 @@ export function AdminTriviaQuestion({ question }: AdminTriviaQuestionProps) {
                                               : null
                                       }
                                   >
-                                      <Grid container spacing={0} width="160px">
-                                          <Grid item xs={2} />
-                                          <Grid item xs={1}>
+                                      <Grid
+                                          container
+                                          spacing={0}
+                                          width="200px"
+                                          height="100px"
+                                          display="flex"
+                                          justifyContent="center"
+                                          alignContent="center"
+                                      >
+                                          <Grid item xs={3} display="flex" justifyContent="center">
                                               <Typography fontWeight="600" fontSize="1.6rem">
                                                   {a.id}
                                               </Typography>
                                           </Grid>
-                                          <Grid item xs={2} />
-                                          <Grid item xs={5}>
+                                          <Grid item xs={1} />
+                                          <Grid item xs={6}>
                                               <Typography fontSize="1.6rem" textAlign="center">
                                                   {a.value}
                                               </Typography>
@@ -178,7 +182,13 @@ export function AdminTriviaQuestion({ question }: AdminTriviaQuestionProps) {
                 </Grid>
             </Grid>
             <Grid item xs={2} display="flex" justifyContent="center" alignItems="center">
-                {exposeCorrectAnswer ? <Button variant="contained" onClick={() => next()}>Dalje</Button> : ""}
+                {exposeCorrectAnswer ? (
+                    <Button variant="contained" onClick={() => next()}>
+                        Dalje
+                    </Button>
+                ) : (
+                    ""
+                )}
             </Grid>
         </Grid>
     );

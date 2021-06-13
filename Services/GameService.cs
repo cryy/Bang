@@ -31,41 +31,73 @@ namespace Bang.Services
             _questionIndex = 0;
             _questions = new Question[]
             {
-                /*new()
+                new()
                 {
                     Type = QuestionType.Trivia,
-                    Title = "Na natjecanju u kuhanje sujeluje 10 natjecatelja. Koliko je mogućih poredaka tih natjecatelja?",
+                    Title = "Na natjecanju u kuhanju sudjeluje 10 natjecatelja. Koliko je mogućih poredaka tih natjecatelja?",
                     Answers = new Answer[]
                     {
                         new("A", "2 420 800"),
                         new("B", "10 * 10"),
-                        new("C", "20!"),
-                        new("D", "3 680 800")
+                        new("C", "3 628 000"),
+                        new("D", "10!")
                     },
                     CorrectId = "D",
-                    Wait = 15000
+                    Wait = 20000
                 },
                 new()
                 {
                     Type = QuestionType.Trivia,
-                    Title = "Grupa učenika sastavljena je od 5 dječaka i 3 djevojčice. Na koliko različitih načina se mogu složiti učenici, tako da su djevojčice uvijek na prva dva mjesta?",
+                    Title = "Stjepan treba ubrati jabuke, kruške i višnje. Na Koliko načina može odabrati kojim će redoslijedom obrati voćke, s tim da svaku može obrati samo jedanput?",
                     Answers = new Answer[]
                     {
-                        new("A", "1460"),
-                        new("B", "5^3"),
+                        new("A", "3"),
+                        new("B", "6"),
                         new("C", "720"),
-                        new("D", "150")
+                        new("D", "30")
                     },
-                    CorrectId = "C",
+                    CorrectId = "B",
                     Wait = 20000
-                },*/
+                },
+                new()
+                {
+                    Type = QuestionType.Trivia,
+                    Title = "Grupa učenika sastavljena je od 4 dječaka i 3 djevojčice. Na koliko različitih načina se mogu složiti učenici, tako da su djevojčice uvijek na prvom mjestu?",
+                    Answers = new Answer[]
+                    {
+                        new("A", "7!"),
+                        new("B", "620"),
+                        new("C", "(3!) * (4!)!"),
+                        new("D", "144")
+                    },
+                    CorrectId = "D",
+                    Wait = 30000
+                },
                 new()
                 {
                     Type = QuestionType.PressButton,
-                    Title = "Pritisni gumb 3! puta.",
+                    Title = "Marija je zapela u liftu te treba stisnuti gumb 3! puta da pozove hitnu službu. Pomozi joj!",
                     Answers = new Answer[] { },
                     CorrectId = "6",
-                    Wait = 80000
+                    Wait = 10000,
+                    ExtraData = new QuestionData()
+                    {
+                        ButtonText = "Pomoć"
+                    }
+                },
+                new()
+                {
+                    Type = QuestionType.Trivia,
+                    Title = "Na koliko se načina može poredati 8 auta sa parkinga bez obzira na to tko će biti na prvom mjestu?",
+                    Answers = new Answer[]
+                    {
+                        new("A", "40 320"),
+                        new("B", "8^8"),
+                        new("C", "36 200"),
+                        new("D", "80 000")
+                    },
+                    CorrectId = "A",
+                    Wait = 15000
                 },
                 new()
                 {
@@ -73,95 +105,68 @@ namespace Bang.Services
                     Title = "Na koliko različitih načina se mogu složiti slova riječi sova?",
                     Answers = new Answer[]
                     {
-                        new("A", "8"),
-                        new("B", "14"),
-                        new("C", "16"),
-                        new("D", "24")
+                        new("A", "24"),
+                        new("B", "36"),
+                        new("C", "24!"),
+                        new("D", "16")
                     },
-                    CorrectId = "D",
+                    CorrectId = "A",
                     Wait = 15000
                 },
                 new()
                 {
                     Type = QuestionType.Trivia,
-                    Title =
-                        "U vazi su 6 crvenih, 4 bijela i 2 žuta cvijeta. Koliko kombinacija se može napraviti, u kojima bi bila 4 cvijeta a tako da budu dva crvena, jedan bijeli i jedan žuti?",
+                    Title = "U timu su 3 napadačka igrača, 3 obrambena igrača i 1 „support“ igrač. Na koliko ih načina možemo rasporediti?",
                     Answers = new Answer[]
                     {
-                        new("A", "120"),
-                        new("B", "460"),
-                        new("C", "326"),
-                        new("D", "48")
-                    },
-                    CorrectId = "A",
-                    Wait = 35000
-                },
-                new()
-                {
-                    Type = QuestionType.Trivia,
-                    Title = "Na klupi su slobodna četiri mjesta. Na koliko načina 15 osoba može popuniti ta 4 mjesta?",
-                    Answers = new Answer[]
-                    {
-                        new("A", "36500"),
-                        new("B", "15000"),
-                        new("C", "32760"),
-                        new("D", "31680")
-                    },
-                    CorrectId = "C",
-                    Wait = 20000
-                },
-                new()
-                {
-                    Type = QuestionType.Trivia,
-                    Title = "Odredi broj permutacija. { a, a, a, b, b, b, c }",
-                    Answers = new Answer[]
-                    {
-                        new("A", "80"),
-                        new("B", "140"),
-                        new("C", "180"),
+                        new("A", "9 x 9"),
+                        new("B", "280"),
+                        new("C", "140"),
                         new("D", "220")
                     },
-                    CorrectId = "B",
-                    Wait = 20000
+                    CorrectId = "C",
+                    Wait = 25000
                 },
                 new()
                 {
                     Type = QuestionType.PressButton,
-                    Title = "Pritisni gumb 0! puta.",
+                    Title = "Marija je opet zapela u liftu. Ona samo kida liftove. Ovog puta treba stisnuti gumb 0! puta.",
                     Answers = new Answer[] { },
                     CorrectId = "1",
-                    Wait = 10000
+                    Wait = 10000,
+                    ExtraData = new QuestionData()
+                    {
+                        ButtonText = "Pomoć"
+                    }
                 },
                 new()
                 {
                     Type = QuestionType.Trivia,
-                    Title =
-                        "Na koliko se nacina moze poredati 8 auta sa parkinga bez obzira na to tko će biti na prvom mjestu?",
+                    Title = "U vazi su 6 crvenih, 4 bijela i 2 žuta cvijeta. Koliko kombinacija možemo napraviti sa 4 cvijeta u kojima su 2 crvena, 1 bijeli i 1 žuti?",
                     Answers = new Answer[]
                     {
-                        new("A", "40 320"),
-                        new("B", "16 420"),
-                        new("C", "32 000"),
-                        new("D", "8! - 1")
+                        new("A", "120"),
+                        new("B", "48"),
+                        new("C", "324"),
+                        new("D", "12!")
+                    },
+                    CorrectId = "A",
+                    Wait = 30000
+                },
+                new()
+                {
+                    Type = QuestionType.Trivia,
+                    Title = "Na klupi su slobodna četiri mjesta. Na koliko načina 15 osoba može popuniti ova mjesta?",
+                    Answers = new Answer[]
+                    {
+                        new("A", "32 760"),
+                        new("B", "15 000"),
+                        new("C", "50 625"),
+                        new("D", "4! + 15")
                     },
                     CorrectId = "A",
                     Wait = 20000
                 },
-                new()
-                {
-                    Type = QuestionType.Trivia,
-                    Title =
-                        "Na koliko načina se može 8 topova razmjestit na šahovsku ploču ali da se međusobno ne napadaju?",
-                    Answers = new Answer[]
-                    {
-                        new("A", "46 900"),
-                        new("B", "12!"),
-                        new("C", "8!"),
-                        new("D", "40 300")
-                    },
-                    CorrectId = "C",
-                    Wait = 20000
-                }
             };
 
             _hubContext = hubContext;

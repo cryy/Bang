@@ -33,6 +33,7 @@ export function UserPressButtonQuestion({ question }: UserPressButtonQuestionPro
             });
         }
     }, [stopVote]);
+    console.log(question);
 
     return (
         <Grid container spacing={0} height="100%" justifyContent="center" alignItems="center">
@@ -54,10 +55,14 @@ export function UserPressButtonQuestion({ question }: UserPressButtonQuestionPro
                             onClick={() => press()}
                             sx={{
                                 width: "128px",
-                                height: "64px"
+                                height: "64px",
+                                fontWeight: 700,
+                                fontSize: "1.01rem"
                             }}
                         >
-                            Stisni me!
+                            {question.extraData?.buttonText
+                                ? question.extraData.buttonText
+                                : "Stisni me!"}
                         </Button>
                     </Grid>
                 </Grid>

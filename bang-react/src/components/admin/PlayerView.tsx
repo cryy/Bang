@@ -1,4 +1,4 @@
-import { Button, Grid, Paper, Typography } from "@material-ui/core";
+import { Button, Grid, Paper, Tooltip, Typography } from "@material-ui/core";
 import React, { useContext } from "react";
 
 import { Context } from "../../context";
@@ -24,7 +24,9 @@ export function PlayerView({ player, key }: PlayerViewProps) {
                     alignItems="center"
                     textAlign="center"
                 >
-                    <Typography fontWeight="600">{player.name}</Typography>
+                    <Tooltip title={player.email} arrow>
+                        <Typography fontWeight="600">{player.name}</Typography>
+                    </Tooltip>
                 </Grid>
                 <Grid
                     item

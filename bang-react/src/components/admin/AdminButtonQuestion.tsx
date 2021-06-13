@@ -24,13 +24,11 @@ export function AdminButtonQuestion({ question }: AdminButtonQuestionProps) {
     const [timeLeft, setTimeLeft] = useState(question!.wait! / 1000);
 
     React.useEffect(() => {
-
         const handler = () => {
-            if(interval)
-            {
+            if (interval) {
                 clearInterval(interval);
                 interval = null;
-                
+
                 setTimeLeft(0);
                 setExposeCorrectAnswer(true);
             }
@@ -49,9 +47,9 @@ export function AdminButtonQuestion({ question }: AdminButtonQuestionProps) {
             });
         }, 1000);
 
-        return (() => {
+        return () => {
             api.connection.off("ForceStopTimeout", handler);
-        });
+        };
     }, []);
 
     const next = () => {
@@ -68,49 +66,48 @@ export function AdminButtonQuestion({ question }: AdminButtonQuestionProps) {
                 height: h as number,
             }}
         >
-            <Grid item xs={12} height="64px" margin="32px 0 0 0">
+            <Grid item xs={2} />
+            <Grid item xs={8} height="64px" margin="32px 0 0 0">
                 <Typography fontSize="2rem" fontWeight="600" textAlign="center">
                     {question?.title}
                 </Typography>
             </Grid>
+            <Grid item xs={2} />
 
-            <Grid item xs={12} margin="14px 0 0 0" height="14px">
-            </Grid>
+            <Grid item xs={12} margin="14px 0 0 0" height="14px"></Grid>
 
-            <Grid item xs={4} height="64px" />
             <Grid
                 item
-                xs={2}
-                height="64px"
+                xs={6}
+                height="124px"
                 display="flex"
                 justifyContent="center"
                 alignContent="center"
                 flexDirection="column"
             >
-                <Typography fontWeight="600" fontSize="1.6rem" textAlign="center">
+                <Typography fontWeight="500" fontSize="1.6rem" textAlign="center">
                     Igrači
                 </Typography>
-                <Typography fontWeight="500" fontSize="1.4rem" textAlign="center">
+                <Typography fontWeight="400" fontSize="1.4rem" textAlign="center">
                     {players.length}
                 </Typography>
             </Grid>
             <Grid
                 item
-                xs={2}
-                height="64px"
+                xs={6}
+                height="124px"
                 display="flex"
                 justifyContent="center"
                 alignContent="center"
                 flexDirection="column"
             >
-                <Typography fontWeight="600" fontSize="1.6rem" textAlign="center">
+                <Typography fontWeight="500" fontSize="1.6rem" textAlign="center">
                     Preostalo vremena
                 </Typography>
-                <Typography fontWeight="500" fontSize="1.4rem" textAlign="center">
+                <Typography fontWeight="400" fontSize="1.4rem" textAlign="center">
                     {timeLeft}s
                 </Typography>
             </Grid>
-            <Grid item xs={4} height="64px" />
 
             <Grid item xs={2} />
             <Grid item xs={8}>
@@ -124,7 +121,9 @@ export function AdminButtonQuestion({ question }: AdminButtonQuestionProps) {
                 >
                     <Typography fontWeight="600" fontSize="1.8rem">
                         {exposeCorrectAnswer
-                            ? `Trebali ste stisnuti gumb ${question.correctId} puta.`
+                            ? `Trebali ste stisnuti gumb ${question.correctId} put${
+                                  question.correctId === "1" ? "" : "a"
+                              }.`
                             : ""}
                     </Typography>
                 </Grid>
