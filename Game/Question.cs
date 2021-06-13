@@ -7,5 +7,7 @@
         public Answer[] Answers { get; init; }
         public string CorrectId { get; init; }
         public int Wait { get; init; }
+
+        public QuestionData ExtraData { get; init; }
     }
 }

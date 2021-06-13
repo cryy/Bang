@@ -1,4 +1,4 @@
-import { Answer, QuestionType } from ".";
+import { Answer, QuestionData, QuestionType } from ".";
 
 export interface Question {
     type: QuestionType;
@@ -6,4 +6,5 @@ export interface Question {
     answers: Answer[];
     correctId?: string;
     wait?: number;
+    extraData?: QuestionData;
 }

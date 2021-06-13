@@ -5,3 +5,4 @@ export * from './Answer';
 export * from './AnswerResult';
 export * from './QuestionEndResult';
 export * from './FinishResult';
+export * from './QuestionData';

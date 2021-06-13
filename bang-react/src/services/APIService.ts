@@ -117,6 +117,10 @@ export class APIService {
         return this.invoke("NextAsync");
     }
 
+    public banAsync(id: string) {
+        return this.invoke("BanAsync", id);
+    }
+
     get connection() {
         return this._connection;
     }

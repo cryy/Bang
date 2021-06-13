@@ -10,12 +10,11 @@ export interface PlayerViewProps {
 }
 
 export function PlayerView({ player, key }: PlayerViewProps) {
-
     const { api } = useContext(Context);
 
     return (
         <Paper variant="outlined">
-            <Grid container spacing={0} width="128px" height="128px">
+            <Grid container spacing={0} width="146px" height="146px">
                 <Grid
                     item
                     xs={12}
@@ -35,18 +34,47 @@ export function PlayerView({ player, key }: PlayerViewProps) {
                     justifyContent="center"
                     alignItems="center"
                 >
-                    <Button
-                        variant="contained"
-                        size="small"
-                        color="secondary"
-                        disableElevation
-                        onClick={() => api.kickAsync(player.connectionId)}
-                    >
-                        Izbaci
-                    </Button>
+                    <Grid container spacing={0}>
+                        <Grid item xs={1} />
+                        <Grid
+                            item
+                            xs={4}
+                            display="flex"
+                            justifyContent="center"
+                            alignItems="center"
+                        >
+                            <Button
+                                variant="contained"
+                                size="small"
+                                color="secondary"
+                                disableElevation
+                                onClick={() => api.kickAsync(player.connectionId)}
+                            >
+                                Izbaci
+                            </Button>
+                        </Grid>
+                        <Grid item xs={2} />
+                        <Grid
+                            item
+                            xs={4}
+                            display="flex"
+                            justifyContent="center"
+                            alignItems="center"
+                        >
+                            <Button
+                                variant="contained"
+                                size="small"
+                                color="secondary"
+                                disableElevation
+                                onClick={() => api.banAsync(player.connectionId)}
+                            >
+                                Banaj
+                            </Button>
+                        </Grid>
+                        <Grid item xs={1} />
+                    </Grid>
                 </Grid>
             </Grid>
         </Paper>
-        
     );
 }

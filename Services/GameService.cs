@@ -5,8 +5,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Bang.WebSocket;
 using Bang.Game;
+using Bang.WebSocket;
 using Bang.WebSocket.API;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
@@ -15,29 +15,23 @@ namespace Bang.Services
 {
     public class GameService
     {
-        private IHubContext<GameHub> _hubContext;
+        private readonly ConcurrentDictionary<string, (DateTimeOffset when, string id)> _answers;
         private IConfiguration _config;
-        private HttpClient _http;
-        private ConcurrentDictionary<string, Player> _players;
-        private Question[] _questions;
-        private int _questionIndex;
-
-        private Question _currentQuestion;
-        private ConcurrentDictionary<string, (DateTimeOffset when, string id)> _answers;
         private CancellationTokenSource _cts;
 
-        public bool Started { get; private set; }
-        public bool TakingAnswers { get; private set; }
-
-        public int AnswerAmount => _answers.Count;
-        public int PlayersAmount => _players.Count;
+        private Question _currentQuestion;
+        private HttpClient _http;
+        private readonly IHubContext<GameHub> _hubContext;
+        private readonly ConcurrentDictionary<string, Player> _players;
+        private int _questionIndex;
+        private readonly Question[] _questions;
 
         public GameService(HttpClient httpClient, IConfiguration config, IHubContext<GameHub> hubContext)
         {
             _questionIndex = 0;
             _questions = new Question[]
             {
-                new()
+                /*new()
                 {
                     Type = QuestionType.Trivia,
                     Title = "Na natjecanju u kuhanje sujeluje 10 natjecatelja. Koliko je mogućih poredaka tih natjecatelja?",
@@ -64,13 +58,14 @@ namespace Bang.Services
                     },
                     CorrectId = "C",
                     Wait = 20000
-                },
-                new (){
+                },*/
+                new()
+                {
                     Type = QuestionType.PressButton,
                     Title = "Pritisni gumb 3! puta.",
                     Answers = new Answer[] { },
                     CorrectId = "6",
-                    Wait = 10000
+                    Wait = 80000
                 },
                 new()
                 {
@@ -89,7 +84,8 @@ namespace Bang.Services
                 new()
                 {
                     Type = QuestionType.Trivia,
-                    Title = "U vazi su 6 crvenih, 4 bijela i 2 žuta cvijeta. Koliko kombinacija se može napraviti, u kojima bi bila 4 cvijeta a tako da budu dva crvena, jedan bijeli i jedan žuti?",
+                    Title =
+                        "U vazi su 6 crvenih, 4 bijela i 2 žuta cvijeta. Koliko kombinacija se može napraviti, u kojima bi bila 4 cvijeta a tako da budu dva crvena, jedan bijeli i jedan žuti?",
                     Answers = new Answer[]
                     {
                         new("A", "120"),
@@ -128,17 +124,19 @@ namespace Bang.Services
                     CorrectId = "B",
                     Wait = 20000
                 },
-                new (){
+                new()
+                {
                     Type = QuestionType.PressButton,
                     Title = "Pritisni gumb 0! puta.",
                     Answers = new Answer[] { },
                     CorrectId = "1",
                     Wait = 10000
-                },                
+                },
                 new()
                 {
                     Type = QuestionType.Trivia,
-                    Title = "Na koliko se nacina moze poredati 8 auta sa parkinga bez obzira na to tko će biti na prvom mjestu?",
+                    Title =
+                        "Na koliko se nacina moze poredati 8 auta sa parkinga bez obzira na to tko će biti na prvom mjestu?",
                     Answers = new Answer[]
                     {
                         new("A", "40 320"),
@@ -152,7 +150,8 @@ namespace Bang.Services
                 new()
                 {
                     Type = QuestionType.Trivia,
-                    Title = "Na koliko načina se može 8 topova razmjestit na šahovsku ploču ali da se međusobno ne napadaju?",
+                    Title =
+                        "Na koliko načina se može 8 topova razmjestit na šahovsku ploču ali da se međusobno ne napadaju?",
                     Answers = new Answer[]
                     {
                         new("A", "46 900"),
@@ -162,19 +161,25 @@ namespace Bang.Services
                     },
                     CorrectId = "C",
                     Wait = 20000
-                },
+                }
             };
 
             _hubContext = hubContext;
             _config = config;
             _http = httpClient;
-            _players = new();
+            _players = new ConcurrentDictionary<string, Player>();
 
-            _answers = new();
+            _answers = new ConcurrentDictionary<string, (DateTimeOffset when, string id)>();
 
             Started = false;
             TakingAnswers = false;
         }
+
+        public bool Started { get; private set; }
+        public bool TakingAnswers { get; private set; }
+
+        public int AnswerAmount => _answers.Count;
+        public int PlayersAmount => _players.Count;
 
         public bool AddPlayer(string connection, Player player)
         {
@@ -226,16 +231,14 @@ namespace Bang.Services
 
                 tasks.Add(_hubContext.Clients.Group("Admin").SendAsync("QuizFinish", new FinishResult(0)));
                 await Task.WhenAll(tasks);
-
             }
             else
             {
                 _currentQuestion = _questions[_questionIndex];
                 var apiQuestion = new APIQuestion(_currentQuestion);
-                
+
                 await _hubContext.Clients.Group("Admin").SendAsync("Question", _currentQuestion);
                 await _hubContext.Clients.Groups("Player", "Admin").SendAsync("QuestionReady");
-                
 
 
                 switch (_currentQuestion.Type)
@@ -247,8 +250,8 @@ namespace Bang.Services
                         await Button(apiQuestion);
                         break;
                 }
+
                 _questionIndex++;
-                
             }
         }
 
@@ -294,7 +297,7 @@ namespace Bang.Services
 
                     if (player.Streak > 1)
                         points += (player.Streak - 1) * 100;
-                    
+
                     player.Streak++;
                     player.Points += points;
                 }
@@ -314,11 +317,11 @@ namespace Bang.Services
             await _hubContext.Clients.Group("Admin")
                 .SendAsync("PlayersUpdate", new QuestionEndResult(_players.Values));
         }
-        
+
         private async Task Trivia(APIQuestion apiQuestion)
         {
             await Task.Delay(5000);
-                
+
             TakingAnswers = true;
             await _hubContext.Clients.Group("Player").SendAsync("Question", apiQuestion);
             _cts = new CancellationTokenSource();
@@ -336,9 +339,9 @@ namespace Bang.Services
 
             TakingAnswers = false;
             await _hubContext.Clients.Group("Player").SendAsync("StopVote");
-            
+
             var tasks = new List<Task>();
-            var orderedAnswers = _answers.OrderBy((v) => v.Value.when).ToList();
+            var orderedAnswers = _answers.OrderBy(v => v.Value.when).ToList();
             var orderedAnswersCorrect = orderedAnswers.Where(v => v.Value.id == _currentQuestion.CorrectId).ToList();
             for (var i = 0; i < _players.Count; i++)
             {
@@ -411,6 +414,5 @@ namespace Bang.Services
             await _hubContext.Clients.Groups("Player", "Admin").SendAsync("Start");
             _ = Task.Delay(5500).ContinueWith(_ => NextQuestionAsync());
         }
-
     }
 }

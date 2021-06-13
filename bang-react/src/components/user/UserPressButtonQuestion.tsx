@@ -52,6 +52,10 @@ export function UserPressButtonQuestion({ question }: UserPressButtonQuestionPro
                             variant="contained"
                             disabled={stopVote}
                             onClick={() => press()}
+                            sx={{
+                                width: "128px",
+                                height: "64px"
+                            }}
                         >
                             Stisni me!
                         </Button>

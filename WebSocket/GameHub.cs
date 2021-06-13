@@ -11,18 +11,28 @@ namespace Bang.WebSocket
 {
     public class GameHub : Hub
     {
-        private GameService _game;
-        private DisconnectService _disconnect;
-        private IConfiguration _config;
-        public GameHub(DisconnectService disconnect, GameService game, IConfiguration config)
+        private readonly BanService _ban;
+        private readonly IConfiguration _config;
+        private readonly DisconnectService _disconnect;
+        private readonly GameService _game;
+
+        public GameHub(DisconnectService disconnect, GameService game, BanService ban, IConfiguration config)
         {
             _game = game;
             _disconnect = disconnect;
+            _ban = ban;
             _config = config;
         }
 
         public override Task OnConnectedAsync()
         {
+            var ip = Context.GetHttpContext().Connection.RemoteIpAddress;
+            if (ip != null && _ban.Exists(ip.GetAddressBytes()))
+            {
+                Context.Abort();
+                return Task.CompletedTask;
+            }
+
             _disconnect.Monitor(Context);
             return base.OnConnectedAsync();
         }
@@ -47,9 +57,13 @@ namespace Bang.WebSocket
                 Streak = 0
             };
             if (_game.Started)
+            {
                 message.ErrorMessage = "Igra je počela.";
+            }
             else if (!_game.AddPlayer(Context.ConnectionId, player))
+            {
                 message.ErrorMessage = "Dogodila se pogreška.";
+            }
             else
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, "Player");
@@ -64,7 +78,9 @@ namespace Bang.WebSocket
             var message = new AdminLoginMessage();
 
             if (key != _config["AdminKey"])
+            {
                 message.ErrorMessage = "Netočan ključ.";
+            }
             else if (_game.GetPlayers().Any(x => x.IsAdmin) || !_game.AddPlayer(Context.ConnectionId, new Player
             {
                 Email = "unset",
@@ -74,7 +90,9 @@ namespace Bang.WebSocket
                 Points = 0,
                 Streak = 0
             }))
+            {
                 message.ErrorMessage = "Dogodila se pogreška.";
+            }
             else
             {
                 message.Players = _game.GetPlayers().ToArray();
@@ -97,9 +115,7 @@ namespace Bang.WebSocket
             else if (!player.IsAdmin)
                 message.ErrorMessage = "Nisi admin.";
             else
-            {
                 await _game.StartAsync();
-            }
 
             return message;
         }
@@ -115,8 +131,31 @@ namespace Bang.WebSocket
             else if (!player.IsAdmin)
                 message.ErrorMessage = "Nisi admin.";
             else
+                _disconnect.Kick(connectionId);
+
+            return message;
+        }
+
+        public async Task<Message> BanAsync(string connectionId)
+        {
+            var message = new Message();
+
+            var player = _game.GetPlayer(Context.ConnectionId);
+
+            if (player == null)
+            {
+                message.ErrorMessage = "Nisi ulogiran.";
+            }
+            else if (!player.IsAdmin)
+            {
+                message.ErrorMessage = "Nisi admin.";
+            }
+            else
             {
                 _disconnect.Kick(connectionId);
+                var ip = Context.GetHttpContext().Connection.RemoteIpAddress;
+                if (ip != null)
+                    _ban.Ban(ip.GetAddressBytes());
             }
 
             return message;
@@ -130,28 +169,24 @@ namespace Bang.WebSocket
                 message.ErrorMessage = "Trenutno ne možeš odgovoriti.";
             else if (!_game.PushAnswer(Context.ConnectionId, id))
                 message.ErrorMessage = "Tvoj odgovor se nije mogao dodati.";
-            
+
             return Task.FromResult(message);
         }
-        
+
         public Task<Message> NextAsync()
         {
             var message = new Message();
 
             var player = _game.GetPlayer(Context.ConnectionId);
-            
+
             if (player == null)
                 message.ErrorMessage = "Nisi ulogiran.";
             else if (!player.IsAdmin)
                 message.ErrorMessage = "Nisi admin.";
             else
-            {
                 _ = _game.NextQuestionAsync();
-            }
 
             return Task.FromResult(message);
         }
-
-
     }
 }
